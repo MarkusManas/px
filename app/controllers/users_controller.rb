@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
 
-  before_action :set_user, only: [:index, :edit, :update] 
-
+  before_action :set_user, only: [:index, :edit, :update]
+  before_action :block_member, only: [:new, :create]
+  before_action :block_admin, only: [:index, :show]
   def index
     @users = User.all
     render :show
@@ -13,38 +14,38 @@ class UsersController < ApplicationController
   
   def create
     @user = User.create(user_params)
-    respond_to do |format|
-      if @user.valid?
-        p "created"
-        format.html { render :new, notice: 'User was successfully created.' }
-        format.json { render json: {msg: "Success"}, status: 200 }
-      else
-        p "not created"
-        format.html { render :new, notice: "#{@user.errors.full_messages}"}
-        format.json { render json: @user.errors, status: 400 }
-      end
+    if @user.valid?
+      redirect_to root_url, alert: 'Successfully created user'
     end
   end
 
   def show
+    # if user doesnt exist, show self
+    if @user.blank?
+      set_user
+    end
   end
 
   def edit
   end
 
   def update
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
-      else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   private
+
+  def block_member
+    if !(['super_admin', 'admin'].include? current_user.role)
+      set_user
+      redirect_to root_url 
+    end
+  end
+
+  def block_admin
+    if (['super_admin', 'admin'].include? current_user.role)
+      redirect_to root_url 
+    end
+  end
 
   def set_user
     @user = User.find(current_user.id)

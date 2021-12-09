@@ -1,24 +1,8 @@
-# README
+NOTES:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+My answer to the 1st test question is 3. The user model will be updated with the provided first_name, last_name and email
+parameters.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+additional notes: 
+    - failed to implement cancancan, did not have time to learn new gem, implemented my own crude authorization process.
+    - failed to properly show messages after user create on users/new, inserts into db properly.

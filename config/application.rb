@@ -15,5 +15,14 @@ module Projectx
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+    RailsAdmin.config do |config|
+      config.authorize_with do 
+        if current_user.nil?
+          redirect_to main_app.root_path
+        else
+          redirect_to main_app.root_path unless current_user.role == 'super_admin'
+        end
+      end
+    end
   end
 end
